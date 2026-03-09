@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#060a0e">
+<meta name="description" content="Shinigami Manga Reader">
+<title>死神 SHINIGAMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Sora:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060a0e;--bg2:#0c1118;--bg3:#131c26;--bg4:#1a2535;
+  --border:#1e2d3d;--border2:#2a3d52;
+  --accent:#e63946;--accent2:#ff6b6b;--accentd:#b02030;
+  --gold:#f4a261;--teal:#2ec4b6;
+  --text:#dce8f0;--text2:#7a9ab5;--text3:#3a5570;
+  --glow:0 0 32px rgba(230,57,70,.2);
+  --card-shadow:0 4px 24px rgba(0,0,0,.5);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* SCANLINE TEXTURE */
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);pointer-events:none;z-index:9999}
+
+/* ── HEADER ── */
+header{position:sticky;top:0;z-index:200;background:rgba(6,10,14,.96);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;padding:0 18px;gap:14px}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:5px;color:var(--accent);cursor:pointer;user-select:none;flex-shrink:0;position:relative}
+.logo::after{content:'READER';font-size:9px;letter-spacing:3px;color:var(--text3);position:absolute;bottom:-2px;left:0;font-family:'JetBrains Mono',monospace}
+.search-wrap{flex:1;max-width:480px;position:relative}
+.search-wrap input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 14px 8px 36px;color:var(--text);font-size:13px;font-family:'Sora',sans-serif;outline:none;transition:all .2s;-webkit-appearance:none}
+.search-wrap input:focus{border-color:var(--accent);background:var(--bg4)}
+.search-wrap input::placeholder{color:var(--text3)}
+.si{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:14px;pointer-events:none}
+.hdr-right{display:flex;gap:6px;margin-left:auto}
+.htab{padding:6px 12px;border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;color:var(--text2);border:1px solid transparent;transition:all .18s;letter-spacing:.8px;text-transform:uppercase;font-family:'JetBrains Mono',monospace;background:none;white-space:nowrap}
+.htab:hover{color:var(--text);background:var(--bg3)}
+.htab.active{color:var(--accent);border-color:var(--accentd);background:rgba(230,57,70,.07)}
+
+/* ── PROXY BANNER ── */
+.proxy-bar{background:var(--bg3);border-bottom:1px solid var(--border);padding:6px 18px;display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3)}
+.proxy-dot{width:6px;height:6px;border-radius:50%;background:var(--text3);flex-shrink:0}
+.proxy-dot.ok{background:var(--teal);animation:blink 2s infinite}
+.proxy-dot.err{background:var(--accent)}
+.proxy-dot.checking{background:var(--gold);animation:blink .5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.proxy-name{color:var(--text2);font-weight:700}
+.proxy-switch{margin-left:auto;display:flex;gap:4px}
+.psw-btn{padding:3px 8px;border-radius:3px;border:1px solid var(--border2);background:none;color:var(--text3);font-family:'JetBrains Mono',monospace;font-size:9px;cursor:pointer;transition:all .15s;text-transform:uppercase}
+.psw-btn:hover{border-color:var(--accent);color:var(--accent)}
+.psw-btn.active{border-color:var(--teal);color:var(--teal);background:rgba(46,196,182,.08)}
+
+/* ── CONTAINER ── */
+.wrap{max-width:1440px;margin:0 auto;padding:24px 18px 60px}
+
+/* ── FILTERS ── */
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;align-items:center}
+.filter-row label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;flex-shrink:0}
+select{background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:6px 24px 6px 10px;color:var(--text);font-size:12px;font-family:'Sora',sans-serif;outline:none;cursor:pointer;transition:border-color .15s;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%233a5570' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center}
+select:focus{border-color:var(--accent)}
+select option{background:var(--bg3)}
+
+/* ── SECTION ── */
+.sec{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.sec-label{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;color:var(--text)}
+.sec-line{flex:1;height:1px;background:linear-gradient(to right,var(--border2),transparent)}
+.sec-ct{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--teal);letter-spacing:1px}
+
+/* ── GRID ── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden;cursor:pointer;transition:all .22s cubic-bezier(.4,0,.2,1);animation:up .4s ease both;position:relative}
+.card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:var(--glow)}
+.card:hover .covr img{transform:scale(1.06)}
+.card:hover .c-overlay{opacity:1}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.covr{position:relative;aspect-ratio:3/4;overflow:hidden;background:var(--bg3)}
+.covr img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s ease}
+.cph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:44px;color:var(--text3)}
+.c-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 20%,rgba(6,10,14,.97) 100%);opacity:0;transition:opacity .22s;display:flex;align-items:flex-end;padding:10px}
+.c-read{width:100%;background:var(--accent);color:#fff;border:none;border-radius:5px;padding:8px;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;cursor:pointer}
+.cbody{padding:9px 11px}
+.ctitle{font-size:11px;font-weight:600;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:5px;color:var(--text)}
+.cmeta{display:flex;gap:4px;flex-wrap:wrap}
+.badge{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 5px;border-radius:3px;text-transform:uppercase;letter-spacing:.3px;font-weight:700}
+.b-on{background:rgba(46,196,182,.12);color:var(--teal)}
+.b-co{background:rgba(59,130,246,.12);color:#60a5fa}
+.b-hi{background:rgba(245,158,11,.12);color:#fbbf24}
+.b-tp{background:rgba(122,154,181,.1);color:var(--text2)}
+.b-rt{background:rgba(244,162,97,.1);color:var(--gold)}
+
+/* ── DETAIL ── */
+.dv,.rv{display:none}
+@keyframes slin{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}
+.backbtn{display:inline-flex;align-items:center;gap:8px;color:var(--text3);font-size:11px;cursor:pointer;padding:6px 0;margin-bottom:20px;transition:color .18s;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:1px;background:none;border:none}
+.backbtn:hover{color:var(--accent)}
+.d-hero{display:grid;grid-template-columns:200px 1fr;gap:24px;margin-bottom:32px}
+.d-cover{width:100%;border-radius:8px;border:1px solid var(--border2);box-shadow:var(--card-shadow)}
+.d-title{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:2px;line-height:1.05;margin-bottom:8px}
+.d-author{font-size:12px;color:var(--text2);margin-bottom:12px;font-family:'JetBrains Mono',monospace;letter-spacing:.5px}
+.d-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.badgelg{font-family:'JetBrains Mono',monospace;font-size:10px;padding:4px 11px;border-radius:4px;text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+.d-desc{font-size:13px;line-height:1.8;color:var(--text2);margin-bottom:18px;max-width:580px}
+.d-genres{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px}
+.gtag{font-size:10px;padding:3px 10px;border-radius:100px;border:1px solid var(--border2);color:var(--text3);cursor:pointer;transition:all .15s;font-family:'JetBrains Mono',monospace;text-transform:capitalize}
+.gtag:hover{border-color:var(--accent);color:var(--accent)}
+.startbtn{display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:#fff;border:none;border-radius:7px;padding:12px 26px;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:3px;cursor:pointer;transition:background .18s;box-shadow:0 4px 20px rgba(230,57,70,.3)}
+.startbtn:hover{background:var(--accent2)}
+
+/* ── CHAPTERS ── */
+.ch-sec{margin-top:28px}
+.chlist{display:flex;flex-direction:column;gap:3px;max-height:480px;overflow-y:auto;padding-right:3px}
+.chlist::-webkit-scrollbar{width:3px}
+.chlist::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.chi{display:flex;align-items:center;gap:12px;padding:11px 13px;background:var(--bg2);border:1px solid var(--border);border-radius:7px;cursor:pointer;transition:all .15s}
+.chi:hover{border-color:var(--accent);background:var(--bg3)}
+.chi-num{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--accent);min-width:52px;letter-spacing:1px}
+.chi-info{flex:1;min-width:0}
+.chi-t{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+.chi-d{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3);margin-top:2px}
+.chi-p{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3);flex-shrink:0}
+
+/* ── READER ── */
+.r-bar{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.r-title{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:2px;color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nbtn{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:7px 13px;border-radius:6px;cursor:pointer;font-size:11px;font-family:'JetBrains Mono',monospace;transition:all .18s;text-transform:uppercase;letter-spacing:.5px}
+.nbtn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.nbtn:disabled{opacity:.3;cursor:not-allowed}
+.mwrap{display:flex;gap:2px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:3px;flex-shrink:0}
+.mbtn{padding:5px 9px;border-radius:4px;font-size:10px;font-family:'JetBrains Mono',monospace;cursor:pointer;color:var(--text3);border:none;background:none;transition:all .18s}
+.mbtn.active{background:var(--accent);color:#fff}
+.pgwrap{display:flex;flex-direction:column;align-items:center;gap:1px}
+.pgwrap.horiz{flex-direction:row;overflow-x:auto;gap:6px;padding-bottom:10px;scroll-snap-type:x mandatory}
+.pgwrap.horiz::-webkit-scrollbar{height:3px}
+.pgwrap.horiz::-webkit-scrollbar-thumb{background:var(--border2)}
+.pgimg{max-width:840px;width:100%;display:block;background:var(--bg3);scroll-snap-align:center}
+.pgwrap.horiz .pgimg{width:auto;height:87vh;max-width:none;object-fit:contain}
+
+/* ── PROGRESS ── */
+.pbar{position:fixed;top:56px;left:0;right:0;height:2px;z-index:199;background:var(--bg3)}
+.pfill{height:100%;background:linear-gradient(to right,var(--accentd),var(--accent));width:0%;transition:width .08s}
+
+/* ── LOADING / STATES ── */
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 0;gap:16px}
+.spin{width:36px;height:36px;border:3px solid var(--bg3);border-top-color:var(--accent);border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.ltxt{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text3)}
+.ebox{background:rgba(230,57,70,.07);border:1px solid rgba(230,57,70,.2);border-radius:7px;padding:16px 18px;color:var(--accent2);font-size:12px;font-family:'JetBrains Mono',monospace;line-height:1.8}
+.empty{text-align:center;padding:70px 0;color:var(--text3);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1px}
+
+/* ── PAGINATION ── */
+.pag{display:flex;justify-content:center;align-items:center;gap:5px;margin-top:32px;flex-wrap:wrap}
+.pgb{min-width:32px;height:32px;padding:0 7px;display:flex;align-items:center;justify-content:center;background:var(--bg2);border:1px solid var(--border);border-radius:5px;color:var(--text3);font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;transition:all .15s}
+.pgb:hover{border-color:var(--accent);color:var(--accent)}
+.pgb.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.pgb:disabled{opacity:.25;cursor:not-allowed}
+
+/* ── SCROLL TOP ── */
+.stbtn{position:fixed;bottom:22px;right:22px;width:40px;height:40px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;opacity:0;transform:translateY(14px);transition:all .28s;z-index:50;box-shadow:0 4px 20px rgba(230,57,70,.4);border:none;color:#fff}
+.stbtn.vis{opacity:1;transform:translateY(0)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--bg4);border:1px solid var(--border2);border-radius:7px;padding:9px 16px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text);z-index:400;opacity:0;transition:all .22s;pointer-events:none;white-space:nowrap;box-shadow:var(--card-shadow)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:780px){
+  .d-hero{grid-template-columns:120px 1fr;gap:16px}
+  .d-title{font-size:26px}
+  .hdr-right{display:none}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
+}
+@media(max-width:480px){
+  .d-hero{grid-template-columns:1fr}
+  .d-cover{max-width:160px}
+  header{padding:0 12px;gap:10px}
+  .wrap{padding:14px 12px 50px}
+}
+</style>
+</head>
+<body>
+
+<div class="pbar"><div class="pfill" id="pfill"></div></div>
+
+<header>
+  <div class="logo" onclick="goHome()">死神</div>
+  <div class="search-wrap">
+    <span class="si">⌕</span>
+    <input type="text" id="q" placeholder="Cari manga..." autocomplete="off" autocorrect="off" spellcheck="false">
+  </div>
+  <div class="hdr-right">
+    <button class="htab active" onclick="setTab('popular',this)">Popular</button>
+    <button class="htab" onclick="setTab('latest',this)">Latest</button>
+  </div>
+</header>
+
+<!-- PROXY STATUS BAR -->
+<div class="proxy-bar">
+  <div class="proxy-dot checking" id="pdot"></div>
+  <span>PROXY:</span>
+  <span class="proxy-name" id="pname">checking...</span>
+  <div class="proxy-switch" id="pswitcher"></div>
+</div>
+
+<div class="wrap">
+  <!-- HOME -->
+  <div id="HV">
+    <div class="filter-row">
+      <label>Filter:</label>
+      <select id="fSt" onchange="applyF()">
+        <option value="">All Status</option>
+        <option value="ongoing">Ongoing</option>
+        <option value="completed">Completed</option>
+        <option value="hiatus">Hiatus</option>
+      </select>
+      <select id="fTy" onchange="applyF()">
+        <option value="">All Type</option>
+        <option value="manga">Manga</option>
+        <option value="manhwa">Manhwa</option>
+        <option value="manhua">Manhua</option>
+      </select>
+      <select id="fGn" onchange="applyF()">
+        <option value="">All Genre</option>
+      </select>
+      <select id="fSo" onchange="applyF()">
+        <option value="popularity">Popularity</option>
+        <option value="rating">Rating</option>
+        <option value="release_date">Release Date</option>
+        <option value="latest">Latest</option>
+      </select>
+      <select id="fOr" onchange="applyF()">
+        <option value="desc">↓ Desc</option>
+        <option value="asc">↑ Asc</option>
+      </select>
+    </div>
+    <div class="sec">
+      <span class="sec-label" id="secLbl">POPULAR</span>
+      <div class="sec-line"></div>
+      <span class="sec-ct" id="secCt"></span>
+    </div>
+    <div id="grid" class="grid"></div>
+    <div class="pag" id="pag"></div>
+  </div>
+
+  <!-- DETAIL -->
+  <div id="DV" class="dv">
+    <button class="backbtn" onclick="goHome()">← BACK</button>
+    <div id="DC"></div>
+  </div>
+
+  <!-- READER -->
+  <div id="RV" class="rv">
+    <button class="backbtn" onclick="goDetail()">← CHAPTERS</button>
+    <div class="r-bar">
+      <div class="r-title" id="rTtl">—</div>
+      <button class="nbtn" id="bPrv" onclick="navCh(-1)">← PREV</button>
+      <button class="nbtn" id="bNxt" onclick="navCh(1)">NEXT →</button>
+      <div class="mwrap">
+        <button class="mbtn active" onclick="setMode('vert',this)">↕</button>
+        <button class="mbtn" onclick="setMode('horiz',this)">↔</button>
+      </div>
+    </div>
+    <div id="PGS" class="pgwrap"></div>
+  </div>
+</div>
+
+<button class="stbtn" id="stbtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="toast" id="tst"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+//  PROXY CONFIG — fallback chain
+// ══════════════════════════════════════════════════════════
+const API   = 'https://api.shngm.io';
+const STORE = 'https://storage.shngm.id';
+
+// Daftar proxy — dicoba urut, auto-fallback kalau gagal
+const PROXIES = [
+  {
+    name: 'corsproxy.io',
+    api:  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+    img:  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  },
+  {
+    name: 'allorigins',
+    api:  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+    img:  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  },
+  {
+    name: 'htmldriven',
+    api:  url => `https://cors.eu.org/${url}`,
+    img:  url => `https://cors.eu.org/${url}`,
+  },
+  {
+    name: 'direct',
+    api:  url => url,
+    img:  url => url,
+  },
+];
+
+let proxyIdx = 0;
+let proxyOk  = false;
+
+function curProxy() { return PROXIES[proxyIdx]; }
+
+function setProxy(idx) {
+  proxyIdx = idx;
+  proxyOk  = false;
+  renderProxySwitcher();
+  document.getElementById('pname').textContent = PROXIES[idx].name;
+  setPdot('checking');
+}
+
+function setPdot(state) {
+  const d = document.getElementById('pdot');
+  d.className = 'proxy-dot ' + state;
+}
+
+function renderProxySwitcher() {
+  const wrap = document.getElementById('pswitcher');
+  wrap.innerHTML = PROXIES.map((p, i) =>
+    `<button class="psw-btn ${i===proxyIdx?'active':''}" onclick="setProxy(${i});testProxy()">${p.name}</button>`
+  ).join('');
+}
+
+async function testProxy() {
+  setPdot('checking');
+  document.getElementById('pname').textContent = curProxy().name + '…';
+  const testUrl = `${API}/v1/manga/list?page=1&page_size=1`;
+  try {
+    const r = await fetch(curProxy().api(testUrl), { signal: AbortSignal.timeout(6000) });
+    if (!r.ok) throw new Error('bad status');
+    await r.json();
+    proxyOk = true;
+    setPdot('ok');
+    document.getElementById('pname').textContent = curProxy().name;
+    renderProxySwitcher();
+    loadHome();
+  } catch {
+    setPdot('err');
+    document.getElementById('pname').textContent = curProxy().name + ' ✗';
+    // Auto-try next
+    if (proxyIdx < PROXIES.length - 1) {
+      proxyIdx++;
+      renderProxySwitcher();
+      setTimeout(testProxy, 400);
+    } else {
+      document.getElementById('pname').textContent = 'semua proxy gagal';
+      document.getElementById('grid').innerHTML =
+        `<div class="ebox">⚠ Semua proxy gagal.<br>Coba manual pilih proxy di atas, atau pakai VPN/browser extension CORS Unblock.</div>`;
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+//  API FETCH
+// ══════════════════════════════════════════════════════════
+async function apiFetch(path) {
+  const url = API + path;
+  const r   = await fetch(curProxy().api(url), { signal: AbortSignal.timeout(12000) });
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json();
+}
+
+const getMangaList = ({ page=1, size=20, sort='popularity', order='desc', status='', type='', genre='', query='' }={}) => {
+  let p = `/v1/manga/list?page=${page}&page_size=${size}&sort=${sort}&sort_order=${order}`;
+  if (status) p += `&status=${status}`;
+  if (type)   p += `&type=${type}`;
+  if (genre)  p += `&genre_include=${genre}&genre_include_mode=and`;
+  if (query)  p += `&query=${encodeURIComponent(query)}`;
+  return apiFetch(p);
+};
+const getMangaDetail = id => apiFetch(`/v1/manga/detail/${id}`);
+const getChList      = id => apiFetch(`/v1/chapter/${id}`);
+const getChDetail    = id => apiFetch(`/v1/chapter/detail/${id}`);
+const getAllGenres    = ()  => apiFetch(`/v1/manga/list?page_size=3000`);
+
+function imgSrc(url) {
+  if (!url) return '';
+  return curProxy().img(url);
+}
+
+// ══════════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════════
+let curView='home', curManga=null, curChs=[], curChIdx=0;
+let curPage=1, curTab='popular', readMode='vert', stmr=null;
+
+// ══════════════════════════════════════════════════════════
+//  UI HELPERS
+// ══════════════════════════════════════════════════════════
+function showView(v) {
+  document.getElementById('HV').style.display = v==='home'   ? 'block':'none';
+  document.getElementById('DV').style.display = v==='detail' ? 'block':'none';
+  document.getElementById('RV').style.display = v==='reader' ? 'block':'none';
+  if (v==='detail') document.getElementById('DV').style.animation='slin .3s ease';
+  curView = v; window.scrollTo(0,0);
+}
+
+const badge = (t, c) => t ? `<span class="badge ${c}">${t}</span>` : '';
+const stBadge = s => ({ongoing:'b-on',completed:'b-co',hiatus:'b-hi'})[s] ? badge(s,({ongoing:'b-on',completed:'b-co',hiatus:'b-hi'})[s]) : '';
+const ld = (t='Loading...') => `<div class="loading"><div class="spin"></div><div class="ltxt">${t}</div></div>`;
+
+function toast(msg) {
+  const t = document.getElementById('tst');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ══════════════════════════════════════════════════════════
+//  RENDER CARD
+// ══════════════════════════════════════════════════════════
+function renderCard(m, delay=0) {
+  const id  = m.manga_id || m.id;
+  const cov = m.cover_image_url || m.thumbnail || '';
+  const img = cov ? `<img src="${imgSrc(cov)}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=cph>📖</div>'">` : '<div class="cph">📖</div>';
+  return `
+  <div class="card" onclick="openManga('${id}')" style="animation-delay:${delay}s">
+    <div class="covr">${img}<div class="c-overlay"><button class="c-read">READ</button></div></div>
+    <div class="cbody">
+      <div class="ctitle">${m.title||'—'}</div>
+      <div class="cmeta">
+        ${stBadge(m.status)}
+        ${m.type?badge(m.type,'b-tp'):''}
+        ${m.rating?badge('★'+parseFloat(m.rating).toFixed(1),'b-rt'):''}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════════
+//  PAGINATION
+// ══════════════════════════════════════════════════════════
+function renderPag(total, cur) {
+  if (total<=1) return '';
+  let h = `<button class="pgb" onclick="toPage(${cur-1})" ${cur<=1?'disabled':''}>‹</button>`;
+  let s=Math.max(1,cur-2), e=Math.min(total,cur+2);
+  if(s>1) h+=`<button class="pgb" onclick="toPage(1)">1</button>${s>2?'<span style="color:var(--text3);padding:0 2px">…</span>':''}`;
+  for(let i=s;i<=e;i++) h+=`<button class="pgb ${i===cur?'active':''}" onclick="toPage(${i})">${i}</button>`;
+  if(e<total) h+=`${e<total-1?'<span style="color:var(--text3);padding:0 2px">…</span>':''}<button class="pgb" onclick="toPage(${total})">${total}</button>`;
+  h+=`<button class="pgb" onclick="toPage(${cur+1})" ${cur>=total?'disabled':''}>›</button>`;
+  return h;
+}
+
+// ══════════════════════════════════════════════════════════
+//  HOME
+// ══════════════════════════════════════════════════════════
+async function loadHome() {
+  showView('home');
+  const grid = document.getElementById('grid');
+  grid.innerHTML = ld('Fetching...');
+  document.getElementById('pag').innerHTML = '';
+
+  const query  = document.getElementById('q').value.trim();
+  const sort   = document.getElementById('fSo').value || 'popularity';
+  const order  = document.getElementById('fOr').value || 'desc';
+  const status = document.getElementById('fSt').value;
+  const type   = document.getElementById('fTy').value;
+  const genre  = document.getElementById('fGn').value;
+
+  document.getElementById('secLbl').textContent = query ? 'SEARCH' : ({popular:'POPULAR',latest:'LATEST'}[curTab]||'MANGA');
+
+  try {
+    const data = await getMangaList({ page:curPage, sort, order, status, type, genre, query });
+    const list = data.data || data.results || data || [];
+    const meta = data.meta || {};
+    const tot  = meta.total_page || 1;
+    document.getElementById('secCt').textContent = list.length ? `${list.length} judul` : '';
+    if (!list.length) { grid.innerHTML='<div class="empty">Tidak ada hasil</div>'; return; }
+    grid.innerHTML = list.map((m,i)=>renderCard(m,i*0.012)).join('');
+    document.getElementById('pag').innerHTML = renderPag(tot, curPage);
+  } catch(e) {
+    grid.innerHTML = `<div class="ebox">⚠ ${e.message}<br>Coba ganti proxy di atas.</div>`;
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+//  DETAIL
+// ══════════════════════════════════════════════════════════
+async function openManga(id) {
+  showView('detail');
+  document.getElementById('DC').innerHTML = ld('Loading detail...');
+  try {
+    const [dR, cR] = await Promise.all([getMangaDetail(id), getChList(id)]);
+    curManga = dR.data || dR;
+    const raw = cR.data || cR;
+    curChs = Array.isArray(raw) ? raw : [];
+    renderDetail(curManga, curChs);
+  } catch(e) {
+    document.getElementById('DC').innerHTML = `<div class="ebox">⚠ ${e.message}</div>`;
+  }
+}
+
+function renderDetail(m, chs) {
+  const cov    = m.cover_image_url || m.thumbnail || '';
+  const genres = (m.genres||[]).map(g=>{ const n=typeof g==='string'?g:(g.name||g.slug||''); return n?`<span class="gtag">${n}</span>`:''; }).join('');
+  const fid    = chs[0]?.chapter_id || chs[0]?.id;
+  const scls   = {ongoing:'b-on',completed:'b-co',hiatus:'b-hi'};
+
+  const chRows = chs.length ? chs.map((ch,i) => {
+    const cid = ch.chapter_id||ch.id;
+    const num = ch.chapter_number||ch.number||(i+1);
+    const ttl = ch.chapter_title||ch.title||'';
+    const dt  = ch.release_date ? new Date(ch.release_date).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'2-digit'}) : '';
+    const pg  = ch.total_page ? `${ch.total_page}p` : '';
+    return `<div class="chi" onclick="openChapter('${cid}',${i})">
+      <div class="chi-num">Ch.${num}</div>
+      <div class="chi-info"><div class="chi-t">${ttl||`Chapter ${num}`}</div>${dt?`<div class="chi-d">${dt}</div>`:''}</div>
+      ${pg?`<div class="chi-p">${pg}</div>`:''}
+    </div>`;
+  }).join('') : '<div class="empty">Belum ada chapter</div>';
+
+  document.getElementById('DC').innerHTML = `
+  <div class="d-hero">
+    <div>${cov?`<img class="d-cover" src="${imgSrc(cov)}" alt="" onerror="this.style.display='none'">`:''}</div>
+    <div>
+      <div class="d-title">${m.title||'—'}</div>
+      ${m.author?`<div class="d-author">// ${m.author}</div>`:''}
+      <div class="d-badges">
+        ${m.status?`<span class="badgelg ${scls[m.status]||'b-tp'}">${m.status}</span>`:''}
+        ${m.type?`<span class="badgelg b-tp">${m.type}</span>`:''}
+        ${m.rating?`<span class="badgelg b-rt">★ ${parseFloat(m.rating).toFixed(1)}</span>`:''}
+      </div>
+      <div class="d-desc">${m.description||m.synopsis||'—'}</div>
+      <div class="d-genres">${genres}</div>
+      ${fid?`<button class="startbtn" onclick="openChapter('${fid}',0)">▶ MULAI BACA</button>`:''}
+    </div>
+  </div>
+  <div class="ch-sec">
+    <div class="sec" style="margin-bottom:10px">
+      <span class="sec-label">CHAPTERS</span>
+      <div class="sec-line"></div>
+      <span class="sec-ct">${chs.length} ch</span>
+    </div>
+    <div class="chlist">${chRows}</div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════════
+//  READER
+// ══════════════════════════════════════════════════════════
+async function openChapter(chId, idx) {
+  if (!chId) { toast('Chapter tidak tersedia'); return; }
+  curChIdx = idx;
+  showView('reader');
+  const ch  = curChs[idx];
+  const num = ch?.chapter_number||(idx+1);
+  document.getElementById('rTtl').textContent = `${curManga?.title||''} — Ch.${num}`;
+  document.getElementById('bPrv').disabled = idx >= curChs.length-1;
+  document.getElementById('bNxt').disabled = idx <= 0;
+
+  const wrap = document.getElementById('PGS');
+  wrap.innerHTML = ld('Loading pages...');
+  wrap.className = `pgwrap ${readMode}`;
+
+  try {
+    const data = await getChDetail(chId);
+    const pd   = data.data||data;
+    let imgs   = pd.pages||pd.images||pd.image_urls||[];
+    if (pd.chapter?.pages) imgs = pd.chapter.pages;
+    if (!imgs.length) { wrap.innerHTML='<div class="ebox">⚠ Tidak ada gambar dalam response.</div>'; return; }
+    wrap.innerHTML = imgs.map((p,i)=>{
+      const src = typeof p==='string'?p:(p.url||p.image_url||p.src||'');
+      return `<img class="pgimg" src="${imgSrc(src)}" alt="Hal ${i+1}" loading="lazy">`;
+    }).join('');
+    window.scrollTo(0,0);
+    setupProg();
+  } catch(e) {
+    wrap.innerHTML = `<div class="ebox">⚠ ${e.message}</div>`;
+  }
+}
+
+function navCh(dir) {
+  const ni = curChIdx+(-dir);
+  if(ni<0||ni>=curChs.length) return;
+  const ch = curChs[ni];
+  openChapter(ch.chapter_id||ch.id, ni);
+}
+
+function setMode(m, el) {
+  readMode = m;
+  document.querySelectorAll('.mbtn').forEach(b=>b.classList.remove('active'));
+  if(el)el.classList.add('active');
+  document.getElementById('PGS').className = `pgwrap ${m}`;
+}
+
+function setupProg() {
+  const f = document.getElementById('pfill');
+  window.addEventListener('scroll',()=>{
+    const h=document.documentElement.scrollHeight-window.innerHeight;
+    if(h>0)f.style.width=(window.scrollY/h*100)+'%';
+  },{passive:true});
+}
+
+// ══════════════════════════════════════════════════════════
+//  NAV
+// ══════════════════════════════════════════════════════════
+function goHome()   { curPage=1; loadHome(); }
+function goDetail() { showView('detail'); }
+function toPage(p)  { curPage=p; loadHome(); }
+
+function setTab(t, el) {
+  curTab=t; curPage=1;
+  document.querySelectorAll('.htab').forEach(b=>b.classList.remove('active'));
+  if(el)el.classList.add('active');
+  document.getElementById('fSo').value = t==='latest'?'latest':'popularity';
+  loadHome();
+}
+
+function applyF() { curPage=1; loadHome(); }
+
+document.getElementById('q').addEventListener('input',()=>{
+  clearTimeout(stmr); stmr=setTimeout(()=>{curPage=1;loadHome();},500);
+});
+document.getElementById('q').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){clearTimeout(stmr);curPage=1;loadHome();}
+});
+
+window.addEventListener('scroll',()=>{
+  document.getElementById('stbtn').classList.toggle('vis',window.scrollY>400);
+},{passive:true});
+
+// ══════════════════════════════════════════════════════════
+//  GENRE LOADER
+// ══════════════════════════════════════════════════════════
+async function loadGenres() {
+  try {
+    const data = await getAllGenres();
+    const list = data.data||[];
+    const set  = new Set();
+    list.forEach(m=>(m.genres||[]).forEach(g=>{const n=typeof g==='string'?g:(g.name||g.slug||'');if(n)set.add(n);}));
+    const sel = document.getElementById('fGn');
+    [...set].sort().forEach(g=>{const o=document.createElement('option');o.value=g;o.textContent=g.charAt(0).toUpperCase()+g.slice(1);sel.appendChild(o);});
+  } catch{}
+}
+
+// ══════════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════════
+renderProxySwitcher();
+testProxy();      // auto-detect & test proxy terbaik
+loadGenres();
+</script>
+</body>
+</html>
