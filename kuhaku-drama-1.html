@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KUHAKU DRAMA</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#08070d;--bg2:#0f0d18;--bg3:#16132a;--bg4:#1e1b30;--card:#12101e;--border:#252040;--red:#e8354a;--red2:#ff4d62;--gold:#d4a94a;--gold2:#f0c55a;--text:#f0eeff;--muted:#6b648a;--muted2:#9d96b8;--cream:#ede0cc;}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;z-index:999;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");opacity:.4;mix-blend-mode:overlay;}
+nav{position:fixed;top:0;left:0;right:0;z-index:600;height:56px;display:flex;align-items:center;padding:0 28px;background:rgba(8,7,13,0.92);backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,0.05);}
+.logo{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;letter-spacing:3px;color:var(--cream);text-decoration:none;display:flex;align-items:center;gap:10px;margin-right:32px;text-transform:uppercase;}
+.logo-mark{width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,var(--red),#a0001e);display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;font-weight:800;flex-shrink:0;box-shadow:0 0 16px rgba(232,53,74,0.5);}
+.nav-tabs{display:flex;gap:2px;flex:1;}
+.nt{padding:6px 14px;border-radius:5px;border:none;background:none;color:var(--muted2);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:.15s;white-space:nowrap;}
+.nt:hover{color:var(--text);background:rgba(255,255,255,0.05);}.nt.active{color:var(--cream);background:rgba(255,255,255,0.08);}
+.nav-right{display:flex;align-items:center;gap:8px;margin-left:auto;}
+.search-box{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:7px 12px;width:210px;transition:.2s;}
+.search-box:focus-within{border-color:rgba(232,53,74,0.5);}
+.search-box input{background:none;border:none;outline:none;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;width:100%;}
+.search-box input::placeholder{color:var(--muted);}.search-icon{font-size:14px;color:var(--muted);flex-shrink:0;}
+main{padding-top:56px;min-height:100vh;position:relative;z-index:1;}
+.sec{display:none;}.sec.active{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+.hero{position:relative;height:540px;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background-size:cover;background-position:center 20%;transition:opacity .8s;}
+.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,rgba(8,7,13,.97) 0%,rgba(8,7,13,.6) 55%,rgba(8,7,13,.1) 100%),linear-gradient(0deg,rgba(8,7,13,1) 0%,transparent 35%);}
+.hero-body{position:absolute;bottom:52px;left:52px;right:52%;z-index:2;}
+.hero-type{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:3px;background:rgba(232,53,74,.15);border:1px solid rgba(232,53,74,.4);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:14px;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,4.5vw,54px);font-weight:700;line-height:1.07;color:var(--cream);margin-bottom:8px;}
+.hero-tagline{font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;color:var(--muted2);margin-bottom:12px;}
+.hero-meta{display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap;}
+.hm{font-size:12px;color:var(--muted2);}.hm-star{color:var(--gold);font-weight:700;}.hm-dot{width:3px;height:3px;border-radius:50%;background:var(--border);}
+.hero-genres{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+.hg-tag{padding:3px 9px;border-radius:3px;font-size:10px;font-weight:600;letter-spacing:.5px;border:1px solid rgba(212,169,74,.3);color:rgba(212,169,74,.8);text-transform:uppercase;}
+.hero-desc{font-family:'Cormorant Garamond',serif;font-size:15px;line-height:1.7;color:rgba(240,236,255,.6);margin-bottom:20px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.hero-btns{display:flex;gap:10px;}
+.btn-red{padding:10px 22px;background:var(--red);border:none;border-radius:6px;color:#fff;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:.15s;}
+.btn-red:hover{background:var(--red2);}
+.btn-ghost{padding:10px 22px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:6px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:.15s;}
+.btn-ghost:hover{border-color:var(--red);color:var(--red);}
+.hero-dots{position:absolute;bottom:18px;right:52px;z-index:2;display:flex;gap:5px;}
+.hdot{width:6px;height:6px;border-radius:50%;background:var(--border);border:none;cursor:pointer;transition:.2s;}
+.hdot.on{background:var(--red);width:22px;border-radius:3px;}
+.pad{padding:28px 40px;}
+.row-head{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+.row-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:var(--cream);white-space:nowrap;}
+.row-accent{width:4px;height:18px;background:var(--red);border-radius:2px;flex-shrink:0;}
+.row-line{flex:1;height:1px;background:var(--border);}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:14px;margin-bottom:36px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s;position:relative;}
+.card:hover{transform:translateY(-5px);border-color:rgba(232,53,74,.35);box-shadow:0 18px 50px rgba(0,0,0,.7),0 0 0 1px rgba(232,53,74,.1);}
+.card-thumb{position:relative;aspect-ratio:2/3;overflow:hidden;background:var(--bg3);}
+.card-img{width:100%;height:100%;object-fit:cover;transition:transform .3s;display:block;}
+.card:hover .card-img{transform:scale(1.05);}
+.card-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--muted);}
+.card-badge-type{position:absolute;top:7px;left:7px;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;backdrop-filter:blur(8px);}
+.badge-movie{background:rgba(232,53,74,.8);color:#fff;}.badge-series{background:rgba(212,169,74,.85);color:#0a0a0a;}
+.card-rating{position:absolute;top:7px;right:7px;background:rgba(8,7,13,.8);border:1px solid rgba(212,169,74,.5);border-radius:4px;padding:2px 6px;font-size:11px;font-weight:700;color:var(--gold);backdrop-filter:blur(8px);}
+.card-grad{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(8,7,13,.96));padding:28px 10px 10px;}
+.card-title{font-size:13px;font-weight:600;line-height:1.3;color:var(--cream);margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.card-meta{display:flex;gap:5px;align-items:center;flex-wrap:wrap;}
+.cm{font-size:10px;color:var(--muted2);}.cm-sep{width:2px;height:2px;border-radius:50%;background:var(--muted);}
+.filter-wrap{position:sticky;top:56px;z-index:200;background:rgba(8,7,13,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:10px 40px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.fl-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-right:2px;flex-shrink:0;}
+.chip{padding:5px 12px;border-radius:5px;border:1px solid var(--border);background:var(--bg2);color:var(--muted2);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;cursor:pointer;transition:.12s;white-space:nowrap;}
+.chip:hover{border-color:var(--red);color:var(--red);}.chip.on{border-color:var(--red);background:rgba(232,53,74,.1);color:var(--red);}
+select.chip{appearance:none;padding-right:22px;background-color:var(--bg2);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%236b648a' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center;}
+select.chip option{background:var(--bg2);}
+.detail-back{padding:14px 40px 0;}
+.back-btn{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--muted2);font-size:12px;font-weight:600;cursor:pointer;transition:.15s;}
+.back-btn:hover{border-color:var(--red);color:var(--red);}
+.detail-hero{position:relative;height:400px;overflow:hidden;}
+.detail-bd{position:absolute;inset:0;background-size:cover;background-position:center;filter:blur(3px);transform:scale(1.06);}
+.detail-bd::after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,var(--bg) 0%,rgba(8,7,13,.55) 60%,rgba(8,7,13,.3) 100%);}
+.detail-poster{position:absolute;bottom:-50px;left:40px;z-index:2;width:150px;aspect-ratio:2/3;border-radius:8px;overflow:hidden;border:2px solid var(--red);box-shadow:0 16px 50px rgba(0,0,0,.85);}
+.detail-poster img,.detail-poster-ph{width:100%;height:100%;object-fit:cover;display:block;}
+.detail-poster-ph{display:flex;align-items:center;justify-content:center;font-size:40px;background:var(--bg3);color:var(--muted);}
+.detail-info{padding:68px 40px 32px 220px;}
+.d-title{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,3.5vw,44px);font-weight:700;line-height:1.1;color:var(--cream);margin-bottom:5px;}
+.d-orig{font-family:'Cormorant Garamond',serif;font-size:14px;font-style:italic;color:var(--muted);margin-bottom:10px;}
+.d-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.dtag{padding:3px 10px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;border:1px solid;}
+.dt-year,.dt-rt{border-color:rgba(212,169,74,.35);color:var(--gold);background:rgba(212,169,74,.06);}
+.dt-cert,.dt-genre,.dt-type{border-color:var(--border);color:var(--muted2);background:var(--bg2);}
+.dt-lang{border-color:rgba(232,53,74,.35);color:var(--red);background:rgba(232,53,74,.05);}
+.rating-block{display:flex;align-items:center;gap:14px;margin-bottom:12px;}
+.big-rt{font-family:'Cormorant Garamond',serif;font-size:44px;font-weight:700;color:var(--gold);line-height:1;}
+.rt-sub{display:flex;flex-direction:column;gap:2px;}
+.rt-stars{font-size:13px;color:var(--gold);}.rt-votes{font-size:10px;color:var(--muted);letter-spacing:.5px;}
+.d-tagline{font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:rgba(212,169,74,.75);margin-bottom:11px;}
+.d-overview{font-family:'Cormorant Garamond',serif;font-size:15px;line-height:1.75;color:rgba(240,236,255,.58);max-width:680px;margin-bottom:18px;}
+.d-crew{font-size:12px;color:var(--muted2);margin-bottom:18px;}.d-crew span{color:var(--cream);font-weight:600;}
+.d-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px;}
+.sec-lbl{font-size:10px;font-weight:700;letter-spacing:2px;color:var(--red);text-transform:uppercase;margin-bottom:12px;}
+.cast-scroll{display:flex;gap:12px;overflow-x:auto;padding-bottom:10px;margin-bottom:28px;scrollbar-width:none;}
+.cast-scroll::-webkit-scrollbar{display:none;}
+.cast-item{flex-shrink:0;width:88px;text-align:center;}
+.cast-avatar{width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid var(--border);background:var(--bg3);margin:0 auto 6px;display:block;}
+.cast-ph{width:80px;height:80px;border-radius:50%;background:var(--bg3);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--muted);margin:0 auto 6px;}
+.cast-name{font-size:11px;font-weight:600;color:var(--cream);line-height:1.3;margin-bottom:2px;}
+.cast-char{font-size:10px;color:var(--muted);font-style:italic;line-height:1.2;}
+.ep-wrap{padding:0 40px 40px;}
+.season-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+.stab{padding:5px 14px;border-radius:5px;border:1px solid var(--border);background:var(--bg2);color:var(--muted2);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:.5px;cursor:pointer;transition:.12s;text-transform:uppercase;}
+.stab:hover{border-color:var(--red);color:var(--red);}.stab.on{border-color:var(--red);background:rgba(232,53,74,.1);color:var(--red);}
+.ep-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:10px;}
+.ep-card{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:11px;cursor:pointer;transition:.14s;position:relative;overflow:hidden;}
+.ep-card:hover{border-color:var(--red);background:rgba(232,53,74,.04);}
+.ep-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),var(--red2));transform:scaleX(0);transition:transform .2s;transform-origin:left;}
+.ep-card:hover::after{transform:scaleX(1);}
+.ep-num{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--cream);line-height:1;margin-bottom:4px;}
+.ep-name{font-size:11px;color:var(--muted);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.ep-sub{position:absolute;top:6px;right:6px;font-size:8px;font-weight:800;letter-spacing:1px;padding:1px 4px;border-radius:2px;background:rgba(232,53,74,.15);color:var(--red);text-transform:uppercase;}
+.search-hero{padding:56px 40px 0;max-width:680px;margin:0 auto;text-align:center;}
+.sh-title{font-family:'Cormorant Garamond',serif;font-size:46px;font-weight:700;color:var(--cream);margin-bottom:6px;}
+.sh-title em{color:var(--red);font-style:italic;}
+.sh-sub{font-size:13px;color:var(--muted);margin-bottom:22px;}
+.sh-form{display:flex;gap:8px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:14px;transition:.2s;}
+.sh-form:focus-within{border-color:rgba(232,53,74,.5);}
+.sh-form input{background:none;border:none;outline:none;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;flex:1;}
+.sh-form input::placeholder{color:var(--muted);}
+.sh-go{padding:7px 18px;background:var(--red);border:none;border-radius:7px;color:#fff;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:.15s;flex-shrink:0;}
+.sh-go:hover{background:var(--red2);}
+.sh-filters{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;}
+.overlay{position:fixed;inset:0;z-index:800;background:rgba(0,0,0,.96);display:none;align-items:center;justify-content:center;backdrop-filter:blur(20px);}
+.overlay.open{display:flex;animation:fadeIn .2s;}
+.player-box{width:94%;max-width:980px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 32px 90px rgba(0,0,0,.95);}
+.player-top{display:flex;align-items:center;justify-content:space-between;padding:11px 18px;background:var(--bg3);border-bottom:1px solid var(--border);}
+.player-title{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:700;color:var(--cream);}
+.close-btn{width:30px;height:30px;border-radius:5px;border:none;background:var(--bg4);color:var(--muted2);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;line-height:1;}
+.close-btn:hover{color:var(--text);background:var(--border);}
+.vid-wrap{position:relative;width:100%;aspect-ratio:16/9;background:#000;}
+video{width:100%;height:100%;display:block;}
+.player-bottom{padding:11px 18px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--bg3);border-top:1px solid var(--border);}
+.q-btn{padding:4px 10px;border-radius:4px;border:1px solid var(--border);background:transparent;color:var(--muted2);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;transition:.12s;}
+.q-btn:hover{border-color:var(--red);color:var(--red);}.q-btn.on{border-color:var(--red);background:rgba(232,53,74,.1);color:var(--red);}
+.sub-group{display:flex;gap:6px;align-items:center;margin-left:auto;}
+.sub-lbl{font-size:10px;color:var(--muted);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;}
+.s-btn{padding:4px 10px;border-radius:4px;border:1px solid rgba(212,169,74,.25);background:rgba(212,169,74,.05);color:rgba(212,169,74,.8);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:.12s;}
+.s-btn:hover,.s-btn.on{background:rgba(212,169,74,.15);color:var(--gold);}
+.skel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:14px;}
+.skel{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;animation:pulse 1.7s ease-in-out infinite;}
+.sk-img{aspect-ratio:2/3;background:var(--bg3);}.sk-body{padding:10px;}.sk-line{height:11px;border-radius:3px;background:var(--bg3);margin-bottom:7px;}.sk-line.s{width:60%;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+.spin{display:inline-block;width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:rot .7s linear infinite;}
+@keyframes rot{to{transform:rotate(360deg);}}
+.load-center{display:flex;align-items:center;justify-content:center;gap:12px;padding:60px;color:var(--muted);font-size:13px;}
+.empty-state{text-align:center;padding:72px 20px;color:var(--muted);}
+.es-icon{font-size:44px;margin-bottom:14px;}.es-title{font-size:16px;color:var(--muted2);margin-bottom:5px;}
+.toast{position:fixed;bottom:22px;right:22px;z-index:9999;background:var(--red);color:#fff;padding:10px 16px;border-radius:7px;font-size:13px;font-weight:600;transform:translateY(70px);opacity:0;transition:.28s;pointer-events:none;}
+.toast.show{transform:none;opacity:1;}
+#sentinel{height:55px;display:flex;align-items:center;justify-content:center;}
+@media(max-width:860px){.detail-info{padding:68px 24px 28px 200px;}.pad,.filter-wrap,.ep-wrap,.detail-back{padding-left:20px;padding-right:20px;}}
+@media(max-width:640px){nav{padding:0 16px;}.nav-tabs{display:none;}.search-box{width:150px;}.hero-body{left:24px;bottom:32px;right:40%;}.detail-poster{left:20px;width:120px;}.detail-info{padding:65px 20px 28px 160px;}.grid,.skel-grid{grid-template-columns:repeat(2,1fr);gap:10px;}.ep-grid{grid-template-columns:repeat(3,1fr);}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="#"><div class="logo-mark">K</div>KUHAKU</a>
+  <div class="nav-tabs">
+    <button class="nt active" onclick="navGo('home-sec',this)">Home</button>
+    <button class="nt" onclick="navGo('film-sec',this)">Film</button>
+    <button class="nt" onclick="navGo('series-sec',this)">Series</button>
+    <button class="nt" onclick="navGo('trend-sec',this)">Trending</button>
+    <button class="nt" onclick="navGo('search-sec',this)">Cari</button>
+  </div>
+  <div class="nav-right">
+    <div class="search-box">
+      <span class="search-icon">⌕</span>
+      <input id="nav-q" type="text" placeholder="Cari judul..." onkeydown="if(event.key==='Enter')quickSearch()">
+    </div>
+  </div>
+</nav>
+<main>
+<div id="home-sec" class="sec active">
+  <div class="hero">
+    <div id="hero-bg" class="hero-bg"></div>
+    <div class="hero-body">
+      <div id="hc-type" class="hero-type">⭐ Featured</div>
+      <div id="hc-title" class="hero-title">Memuat...</div>
+      <div id="hc-tagline" class="hero-tagline"></div>
+      <div id="hc-meta" class="hero-meta"></div>
+      <div id="hc-genres" class="hero-genres"></div>
+      <div id="hc-desc" class="hero-desc"></div>
+      <div class="hero-btns">
+        <button class="btn-red" id="hc-play">▶ Tonton</button>
+        <button class="btn-ghost" id="hc-info">ℹ Detail</button>
+      </div>
+    </div>
+    <div class="hero-dots" id="hero-dots"></div>
+  </div>
+  <div class="pad">
+    <div class="row-head"><div class="row-accent"></div><div class="row-title">🔥 Popular</div><div class="row-line"></div></div>
+    <div id="h-pop" class="grid"></div>
+    <div class="row-head"><div class="row-accent"></div><div class="row-title">📈 Trending</div><div class="row-line"></div></div>
+    <div id="h-trend" class="grid"></div>
+    <div class="row-head"><div class="row-accent"></div><div class="row-title">⭐ Rating Tertinggi</div><div class="row-line"></div></div>
+    <div id="h-rated" class="grid"></div>
+  </div>
+</div>
+<div id="film-sec" class="sec">
+  <div class="filter-wrap">
+    <span class="fl-lbl">Sort</span>
+    <select class="chip" id="film-sort" onchange="resetFilm()">
+      <option value="play_count">Terpopuler</option>
+      <option value="vote_average">Rating</option>
+      <option value="release_year">Terbaru</option>
+      <option value="updated_at">Update</option>
+    </select>
+    <span class="fl-lbl" style="margin-left:8px">Bahasa</span>
+    <button class="chip on" onclick="setFilmLang('',this)">Semua</button>
+    <button class="chip" onclick="setFilmLang('zh',this)">中文</button>
+    <button class="chip" onclick="setFilmLang('en',this)">EN</button>
+    <button class="chip" onclick="setFilmLang('ko',this)">KO</button>
+    <button class="chip" onclick="setFilmLang('id',this)">ID</button>
+  </div>
+  <div class="pad" style="padding-top:18px">
+    <div class="row-head"><div class="row-accent"></div><div class="row-title">🎬 Semua Film</div><div class="row-line"></div><span id="film-count" style="font-size:11px;color:var(--muted);white-space:nowrap"></span></div>
+    <div id="film-grid" class="grid"></div>
+  </div>
+</div>
+<div id="series-sec" class="sec">
+  <div class="filter-wrap">
+    <span class="fl-lbl">Sort</span>
+    <select class="chip" id="series-sort" onchange="resetSeries()">
+      <option value="play_count">Terpopuler</option>
+      <option value="vote_average">Rating</option>
+      <option value="release_year">Terbaru</option>
+      <option value="updated_at">Update</option>
+    </select>
+    <span class="fl-lbl" style="margin-left:8px">Bahasa</span>
+    <button class="chip on" onclick="setSeriesLang('',this)">Semua</button>
+    <button class="chip" onclick="setSeriesLang('zh',this)">中文</button>
+    <button class="chip" onclick="setSeriesLang('en',this)">EN</button>
+    <button class="chip" onclick="setSeriesLang('ko',this)">KO</button>
+    <button class="chip" onclick="setSeriesLang('id',this)">ID</button>
+  </div>
+  <div class="pad" style="padding-top:18px">
+    <div class="row-head"><div class="row-accent"></div><div class="row-title">📺 Semua Series</div><div class="row-line"></div><span id="series-count" style="font-size:11px;color:var(--muted);white-space:nowrap"></span></div>
+    <div id="series-grid" class="grid"></div>
+  </div>
+</div>
+<div id="trend-sec" class="sec">
+  <div class="filter-wrap">
+    <span class="fl-lbl">Type</span>
+    <button class="chip on" onclick="setTrendType('',this)">Semua</button>
+    <button class="chip" onclick="setTrendType('movies',this)">Film</button>
+    <button class="chip" onclick="setTrendType('series',this)">Series</button>
+  </div>
+  <div class="pad" style="padding-top:18px">
+    <div class="row-head"><div class="row-accent"></div><div class="row-title">📈 Trending</div><div class="row-line"></div></div>
+    <div id="trend-grid" class="grid"></div>
+  </div>
+</div>
+<div id="search-sec" class="sec">
+  <div class="search-hero">
+    <div class="sh-title">Cari <em>Drama</em></div>
+    <div class="sh-sub">Movies, series, 16K+ konten tersedia</div>
+    <div class="sh-form">
+      <input id="sq" type="text" placeholder="Money Heist, Stranger Things..." onkeydown="if(event.key==='Enter')doSearch()">
+      <button class="sh-go" onclick="doSearch()">Cari</button>
+    </div>
+    <div class="sh-filters">
+      <button class="chip on" onclick="setST('',this)">Semua</button>
+      <button class="chip" onclick="setST('movies',this)">Film</button>
+      <button class="chip" onclick="setST('series',this)">Series</button>
+    </div>
+  </div>
+  <div class="pad" style="padding-top:28px"><div id="search-grid" class="grid"></div></div>
+</div>
+<div id="detail-sec" class="sec">
+  <div class="detail-back"><button class="back-btn" onclick="goBack()">← Kembali</button></div>
+  <div id="detail-content"></div>
+</div>
+</main>
+<div class="overlay" id="player" onclick="maybeClose(event)">
+  <div class="player-box">
+    <div class="player-top">
+      <div class="player-title" id="p-title">Episode</div>
+      <button class="close-btn" onclick="closePlayer()">✕</button>
+    </div>
+    <div class="vid-wrap"><video id="vid" controls playsinline></video></div>
+    <div class="player-bottom">
+      <div id="q-btns" style="display:flex;gap:6px;"></div>
+      <div class="sub-group" id="sub-group"></div>
+    </div>
+  </div>
+</div>
+<div id="sentinel"></div>
+<div class="toast" id="toast"></div>
+<script>
+const BASE='https://api-short.stor.co.id';
+const KEY='sk_live_2fbd6048292404c27a8662ec7c4a5134a7f6c9d416d9e29a';
+const H={Authorization:`Bearer ${KEY}`};
+const TMDB='https://image.tmdb.org/t/p';
+let prevSec='home-sec';
+let filmPage=1,filmLang='',filmSort='play_count';
+let seriesPage=1,seriesLang='',seriesSort='play_count';
+let trendPage=1,trendType='';
+let searchTypeVal='';
+let isLoading=false;
+let heroItems=[],heroIdx=0,heroTimer=null;
+
+async function api(path){
+  try{const r=await fetch(BASE+path,{headers:H});if(!r.ok)throw new Error(r.status);return r.json();}
+  catch(e){toast('Gagal: '+e.message);return null;}
+}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+function getPoster(d){const t=d.raw_data?.tmdb;return t?.poster_path?`${TMDB}/w500${t.poster_path}`:d.cover_url||'';}
+function getBackdrop(d){const t=d.raw_data?.tmdb;if(t?.backdrop_path)return`${TMDB}/w1280${t.backdrop_path}`;if(t?.backdrops?.length)return`${TMDB}/w1280${t.backdrops[0].file_path}`;return d.cover_url||'';}
+function getRating(d){return d.raw_data?.tmdb?.vote_average?.toFixed(1)||'';}
+function getYear(d){return d.raw_data?.release_year||d.raw_data?.tmdb?.release_date?.slice(0,4)||'';}
+function getRuntime(d){const rt=d.raw_data?.tmdb?.runtime;return rt?`${Math.floor(rt/60)}h ${rt%60}m`:'';}
+function getGenres(d){return(d.raw_data?.tmdb?.genres||[]).slice(0,3).map(g=>g.name);}
+function isMovie(d){return d.provider_slug==='moviebox-movies'||d.chapter_count===1;}
+function skels(el,n=12){el.innerHTML=Array(n).fill('').map(()=>`<div class="skel"><div class="sk-img"></div><div class="sk-body"><div class="sk-line"></div><div class="sk-line s"></div></div></div>`).join('');}
+
+function renderCards(items,el,append=false){
+  if(!append)el.innerHTML='';
+  if(!items?.length){if(!append)el.innerHTML=`<div class="empty-state"><div class="es-icon">🎬</div><div class="es-title">Tidak ada konten</div></div>`;return;}
+  const frag=document.createDocumentFragment();
+  items.forEach(d=>{
+    const div=document.createElement('div');div.className='card';div.onclick=()=>openDetail(d.id);
+    const img=getPoster(d);const rt=getRating(d);const yr=getYear(d);const mov=isMovie(d);const rts=getRuntime(d);
+    div.innerHTML=`<div class="card-thumb">${img?`<img class="card-img" src="${img}" loading="lazy" onerror="this.style.display='none';this.nextSibling.style.display='flex'">`:''}<div class="card-ph" style="${img?'display:none':''}">🎬</div><div class="card-badge-type ${mov?'badge-movie':'badge-series'}">${mov?'Film':'Series'}</div>${rt?`<div class="card-rating">★ ${rt}</div>`:''}<div class="card-grad"><div class="card-title">${d.title}</div><div class="card-meta">${yr?`<span class="cm">${yr}</span>`:''} ${mov?rts?`<span class="cm-sep"></span><span class="cm">${rts}</span>`:'':d.chapter_count?`<span class="cm-sep"></span><span class="cm">${d.chapter_count} EP`+`</span>`:''}</div></div></div>`;
+    frag.appendChild(div);
+  });
+  el.appendChild(frag);
+}
+
+function showHero(idx){
+  const item=heroItems[idx];if(!item)return;heroIdx=idx;
+  const tmdb=item.raw_data?.tmdb||{};const bd=getBackdrop(item);
+  if(bd)document.getElementById('hero-bg').style.backgroundImage=`url('${bd}')`;
+  document.getElementById('hc-title').textContent=item.title;
+  document.getElementById('hc-tagline').textContent=tmdb.tagline||'';
+  document.getElementById('hc-desc').textContent=tmdb.overview||item.introduction||'';
+  const rt=getRating(item),yr=getYear(item),cert=tmdb.certification||'',rtm=tmdb.runtime;
+  document.getElementById('hc-type').textContent=isMovie(item)?'🎬 Film':'📺 Series';
+  document.getElementById('hc-meta').innerHTML=[rt?`<span class="hm hm-star">★ ${rt}</span>`:'',yr?`<span class="hm-dot"></span><span class="hm">${yr}</span>`:'',cert?`<span class="hm-dot"></span><span class="hm">${cert}</span>`:'',rtm?`<span class="hm-dot"></span><span class="hm">${Math.floor(rtm/60)}h ${rtm%60}m</span>`:''}.join('');
+  document.getElementById('hc-genres').innerHTML=getGenres(item).map(g=>`<span class="hg-tag">${g}</span>`).join('');
+  document.getElementById('hc-play').onclick=()=>openDetail(item.id,true);
+  document.getElementById('hc-info').onclick=()=>openDetail(item.id);
+  document.querySelectorAll('.hdot').forEach((d,i)=>d.classList.toggle('on',i===idx));
+}
+function buildHero(items){
+  heroItems=items.slice(0,6);
+  const dotsEl=document.getElementById('hero-dots');
+  dotsEl.innerHTML=heroItems.map((_,i)=>`<button class="hdot${i===0?' on':''}" onclick="showHero(${i})"></button>`).join('');
+  showHero(0);if(heroTimer)clearInterval(heroTimer);
+  heroTimer=setInterval(()=>showHero((heroIdx+1)%heroItems.length),6500);
+}
+
+async function loadHome(){
+  skels(document.getElementById('h-pop'),8);skels(document.getElementById('h-trend'),8);skels(document.getElementById('h-rated'),8);
+  const[pop,trend,rated]=await Promise.all([api('/api/moviebox/popular?per_page=18'),api('/api/moviebox/trending?per_page=18'),api('/api/moviebox?sort_by=vote_average&sort_order=desc&per_page=18')]);
+  const popData=pop?.data||[];if(popData.length)buildHero(popData);
+  renderCards(popData,document.getElementById('h-pop'));renderCards(trend?.data,document.getElementById('h-trend'));renderCards(rated?.data,document.getElementById('h-rated'));
+}
+function setFilmLang(l,btn){filmLang=l;filmPage=1;btn.closest('.filter-wrap').querySelectorAll('.chip:not(select)').forEach(c=>c.classList.remove('on'));btn.classList.add('on');loadFilm();}
+function resetFilm(){filmSort=document.getElementById('film-sort').value;filmPage=1;loadFilm();}
+async function loadFilm(append=false){const el=document.getElementById('film-grid');if(!append)skels(el);let url=`/api/moviebox?type=movies&page=${filmPage}&per_page=50&sort_by=${filmSort}&sort_order=desc`;if(filmLang)url+=`&language=${filmLang}`;const d=await api(url);if(d?.meta?.total)document.getElementById('film-count').textContent=d.meta.total.toLocaleString()+' film';renderCards(d?.data,el,append);}
+function setSeriesLang(l,btn){seriesLang=l;seriesPage=1;btn.closest('.filter-wrap').querySelectorAll('.chip:not(select)').forEach(c=>c.classList.remove('on'));btn.classList.add('on');loadSeries();}
+function resetSeries(){seriesSort=document.getElementById('series-sort').value;seriesPage=1;loadSeries();}
+async function loadSeries(append=false){const el=document.getElementById('series-grid');if(!append)skels(el);let url=`/api/moviebox?type=series&page=${seriesPage}&per_page=50&sort_by=${seriesSort}&sort_order=desc`;if(seriesLang)url+=`&language=${seriesLang}`;const d=await api(url);if(d?.meta?.total)document.getElementById('series-count').textContent=d.meta.total.toLocaleString()+' series';renderCards(d?.data,el,append);}
+function setTrendType(t,btn){trendType=t;trendPage=1;btn.closest('.filter-wrap').querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));btn.classList.add('on');loadTrend();}
+async function loadTrend(append=false){const el=document.getElementById('trend-grid');if(!append)skels(el);let url=`/api/moviebox/trending?page=${trendPage}&per_page=50`;if(trendType)url+=`&type=${trendType}`;const d=await api(url);renderCards(d?.data,el,append);}
+function setST(t,btn){searchTypeVal=t;document.querySelectorAll('#search-sec .sh-filters .chip').forEach(c=>c.classList.remove('on'));btn.classList.add('on');}
+async function doSearch(){const q=document.getElementById('sq').value.trim();if(!q){toast('Masukkan kata kunci!');return;}const el=document.getElementById('search-grid');skels(el);let url=`/api/moviebox/search?q=${encodeURIComponent(q)}&per_page=50`;if(searchTypeVal)url+=`&type=${searchTypeVal}`;const d=await api(url);renderCards(d?.data,el);}
+function quickSearch(){const q=document.getElementById('nav-q').value.trim();if(!q)return;document.getElementById('sq').value=q;navGo('search-sec',document.querySelectorAll('.nt')[4]);doSearch();}
+
+function navGo(id,btn){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nt').forEach(n=>n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');if(btn)btn.classList.add('active');prevSec=id;
+  if(id==='film-sec'&&!document.getElementById('film-grid').children.length)loadFilm();
+  if(id==='series-sec'&&!document.getElementById('series-grid').children.length)loadSeries();
+  if(id==='trend-sec'&&!document.getElementById('trend-grid').children.length)loadTrend();
+}
+function goBack(){
+  const secMap={'home-sec':0,'film-sec':1,'series-sec':2,'trend-sec':3,'search-sec':4};
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));document.getElementById(prevSec).classList.add('active');
+  document.querySelectorAll('.nt').forEach((n,i)=>n.classList.toggle('active',i===secMap[prevSec]));
+}
+
+async function openDetail(id,autoPlay=false){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));document.getElementById('detail-sec').classList.add('active');
+  const el=document.getElementById('detail-content');el.innerHTML=`<div class="load-center"><div class="spin"></div> Memuat...</div>`;
+  const d=await api(`/api/moviebox/${id}`);const data=d?.data;
+  if(!data){el.innerHTML=`<div class="empty-state"><div class="es-icon">⚠️</div><div class="es-title">Gagal memuat</div></div>`;return;}
+  const drama=data.drama||data;const episodes=data.episodes||[];const tmdb=drama.raw_data?.tmdb||{};
+  const mov=isMovie(drama);const bd=getBackdrop(drama);const poster=getPoster(drama);
+  const rt=getRating(drama);const yr=getYear(drama);const gens=getGenres(drama);
+  const cast=(tmdb.cast||[]).slice(0,12);const dirs=(tmdb.directors||[]).map(x=>x.name).join(', ');
+  const trailer=(tmdb.trailers||[]).find(t=>t.type==='Trailer'&&t.site==='YouTube');
+  const cert=tmdb.certification||'';const rtm=tmdb.runtime;const votes=tmdb.vote_count?.toLocaleString('id')||'';
+  const seasons={};
+  episodes.forEach(ep=>{const s=ep.episode_index>=1000?Math.floor(ep.episode_index/1000):0;if(!seasons[s])seasons[s]=[];seasons[s].push(ep);});
+  const sKeys=Object.keys(seasons).sort((a,b)=>+a-+b);
+  el.innerHTML=`
+    <div class="detail-hero">
+      <div class="detail-bd" style="background-image:url('${bd}')"></div>
+      <div class="detail-poster">${poster?`<img src="${poster}" alt="${drama.title}" onerror="this.style.display='none';this.nextSibling.style.display='flex'">`:''}<div class="detail-poster-ph" style="${poster?'display:none':''}">🎬</div></div>
+    </div>
+    <div class="detail-info">
+      <div class="d-title">${drama.title}</div>
+      ${tmdb.original_title&&tmdb.original_title!==drama.title?`<div class="d-orig">${tmdb.original_title} (${tmdb.original_language||''})</div>`:''}
+      <div class="d-tags">
+        ${yr?`<span class="dtag dt-year">${yr}</span>`:''}${rtm?`<span class="dtag dt-rt">${Math.floor(rtm/60)}h ${rtm%60}m</span>`:''}${cert?`<span class="dtag dt-cert">${cert}</span>`:''}${gens.map(g=>`<span class="dtag dt-genre">${g}</span>`).join('')}${drama.language?`<span class="dtag dt-lang">${drama.language.toUpperCase()}</span>`:''}<span class="dtag dt-type">${mov?'Film':'Series'}</span>
+      </div>
+      ${rt?`<div class="rating-block"><div class="big-rt">${rt}</div><div class="rt-sub"><div class="rt-stars">${'★'.repeat(Math.round(parseFloat(rt)/2))}${'☆'.repeat(5-Math.round(parseFloat(rt)/2))}</div><div class="rt-votes">${votes} votes · TMDB</div></div></div>`:''}
+      ${tmdb.tagline?`<div class="d-tagline">"${tmdb.tagline}"</div>`:''}
+      <div class="d-overview">${tmdb.overview||drama.introduction||'Tidak ada sinopsis.'}</div>
+      ${dirs?`<div class="d-crew">Sutradara: <span>${dirs}</span></div>`:''}
+      <div class="d-actions">
+        <button class="btn-red" id="d-play-btn">▶ Tonton</button>
+        ${trailer?`<a href="https://youtube.com/watch?v=${trailer.key}" target="_blank" style="text-decoration:none"><button class="btn-ghost">▶ Trailer</button></a>`:''}
+      </div>
+      ${cast.length?`<div class="sec-lbl">Pemeran</div><div class="cast-scroll">${cast.map(a=>`<div class="cast-item">${a.profile_path?`<img class="cast-avatar" src="${TMDB}/w185${a.profile_path}" loading="lazy" alt="${a.name}">`:`<div class="cast-ph">👤</div>`}<div class="cast-name">${a.name}</div><div class="cast-char">${a.character||''}</div></div>`).join('')}</div>`:''}
+    </div>
+    <div class="ep-wrap">
+      <div class="sec-lbl">EPISODES (${episodes.length})</div>
+      ${sKeys.length>1?`<div class="season-tabs" id="s-tabs">${sKeys.map((s,i)=>`<button class="stab${i===0?' on':''}" onclick="showSeason(${s},this)">${+s===0?'Film':'Season '+s}</button>`).join('')}</div>`:''}
+      <div class="ep-grid" id="ep-grid"></div>
+    </div>`;
+  window._epCtx={episodes,seasons,title:drama.title};
+  window.showSeason=(s,btn)=>{document.querySelectorAll('.stab').forEach(b=>b.classList.remove('on'));btn?.classList.add('on');renderEps(window._epCtx.seasons[s]||[],drama.title);};
+  renderEps(seasons[+sKeys[0]]||episodes,drama.title);
+  document.getElementById('d-play-btn').onclick=()=>{if(episodes[0])openPlayer(episodes[0],drama.title);else toast('Belum ada episode');};
+  if(autoPlay&&episodes[0])setTimeout(()=>openPlayer(episodes[0],drama.title),300);
+}
+
+function renderEps(eps,title){
+  const el=document.getElementById('ep-grid');if(!el)return;el.innerHTML='';
+  if(!eps.length){el.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="es-icon">📺</div><div class="es-title">Belum ada episode</div></div>`;return;}
+  eps.forEach(ep=>{
+    const div=document.createElement('div');div.className='ep-card';
+    const idx=ep.episode_index>=1000?ep.episode_index%1000:ep.episode_index;
+    div.innerHTML=`${ep.subtitles?.length?`<div class="ep-sub">SUB</div>`:''}<div class="ep-num">${String(idx).padStart(2,'0')}</div><div class="ep-name">${ep.episode_name||'Episode '+idx}</div>`;
+    div.onclick=()=>openPlayer(ep,title);el.appendChild(div);
+  });
+}
+
+async function openPlayer(ep,title){
+  document.getElementById('player').classList.add('open');
+  const idx=ep.episode_index>=1000?ep.episode_index%1000:ep.episode_index;
+  document.getElementById('p-title').textContent=`${title} · EP ${String(idx).padStart(2,'0')}`;
+  document.getElementById('q-btns').innerHTML='<div class="spin"></div>';document.getElementById('sub-group').innerHTML='';document.getElementById('vid').src='';
+  const quals=ep.qualities||{};const subs=ep.subtitles||[];let playUrl=ep.video_url||'';
+  const qEl=document.getElementById('q-btns');qEl.innerHTML='';
+  const order=['1080p','720p','480p','360p'];const qKeys=order.filter(k=>quals[k]).concat(Object.keys(quals).filter(k=>!order.includes(k)));
+  if(qKeys.length){qKeys.forEach((k,i)=>{const btn=document.createElement('button');btn.className='q-btn'+(i===0?' on':'');btn.textContent=k;const url=quals[k];btn.onclick=()=>{document.querySelectorAll('.q-btn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');setVid(url);};qEl.appendChild(btn);if(i===0)playUrl=url;});}else if(playUrl){const b=document.createElement('button');b.className='q-btn on';b.textContent='720p';qEl.appendChild(b);}else{qEl.innerHTML='<span style="font-size:11px;color:var(--muted)">Tidak tersedia</span>';}
+  const sEl=document.getElementById('sub-group');
+  if(subs.length){const lbl=document.createElement('span');lbl.className='sub-lbl';lbl.textContent='SUB';sEl.appendChild(lbl);const off=document.createElement('button');off.className='s-btn';off.textContent='Off';off.onclick=()=>{document.querySelectorAll('.s-btn').forEach(b=>b.classList.remove('on'));off.classList.add('on');offSub();};sEl.appendChild(off);const LN={en:'EN',id:'ID',zh:'ZH',ko:'KO',ar:'AR',fr:'FR',de:'DE',hi:'HI',pt:'PT',ru:'RU',es:'ES',tr:'TR'};subs.forEach((s,i)=>{const btn=document.createElement('button');btn.className='s-btn'+(i===0?' on':'');btn.textContent=LN[s.lang]||s.label||s.lang.toUpperCase();btn.onclick=()=>{document.querySelectorAll('.s-btn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');loadSub(s.url,s.lang);};sEl.appendChild(btn);});}else{sEl.innerHTML='<span style="font-size:11px;color:var(--muted);margin-left:auto">No subtitles</span>';}
+  if(playUrl){setVid(playUrl);if(subs[0])setTimeout(()=>loadSub(subs[0].url,subs[0].lang),800);}else toast('Tidak ada URL video');
+}
+function setVid(url){const v=document.getElementById('vid');v.src=url;v.play().catch(()=>{});}
+function loadSub(url,lang){const v=document.getElementById('vid');v.querySelectorAll('track').forEach(t=>t.remove());for(let i=0;i<v.textTracks.length;i++)try{v.textTracks[i].mode='disabled';}catch(e){}const tr=document.createElement('track');tr.kind='subtitles';tr.src=url+'?_='+Date.now();tr.srclang=lang;tr.default=true;v.appendChild(tr);setTimeout(()=>{for(let i=0;i<v.textTracks.length;i++){if(v.textTracks[i].language===lang||i===v.textTracks.length-1){v.textTracks[i].mode='showing';break;}}},400);}
+function offSub(){const v=document.getElementById('vid');for(let i=0;i<v.textTracks.length;i++)try{v.textTracks[i].mode='hidden';}catch(e){}}
+function closePlayer(){document.getElementById('player').classList.remove('open');const v=document.getElementById('vid');v.pause();v.src='';}
+function maybeClose(e){if(e.target===document.getElementById('player'))closePlayer();}
+
+new IntersectionObserver(async entries=>{
+  if(!entries[0].isIntersecting||isLoading)return;
+  const active=document.querySelector('.sec.active')?.id;
+  if(!['film-sec','series-sec','trend-sec'].includes(active))return;
+  isLoading=true;document.getElementById('sentinel').innerHTML='<div class="spin"></div>';
+  if(active==='film-sec'){filmPage++;let url=`/api/moviebox?type=movies&page=${filmPage}&per_page=50&sort_by=${filmSort}&sort_order=desc`;if(filmLang)url+=`&language=${filmLang}`;const d=await api(url);if(d?.data?.length)renderCards(d.data,document.getElementById('film-grid'),true);}
+  else if(active==='series-sec'){seriesPage++;let url=`/api/moviebox?type=series&page=${seriesPage}&per_page=50&sort_by=${seriesSort}&sort_order=desc`;if(seriesLang)url+=`&language=${seriesLang}`;const d=await api(url);if(d?.data?.length)renderCards(d.data,document.getElementById('series-grid'),true);}
+  else if(active==='trend-sec'){trendPage++;let url=`/api/moviebox/trending?page=${trendPage}&per_page=50`;if(trendType)url+=`&type=${trendType}`;const d=await api(url);if(d?.data?.length)renderCards(d.data,document.getElementById('trend-grid'),true);}
+  document.getElementById('sentinel').innerHTML='';isLoading=false;
+},{rootMargin:'200px'}).observe(document.getElementById('sentinel'));
+
+loadHome();
+</script>
+</body>
+</html>
